@@ -1,5 +1,6 @@
+import React from 'react';
 import CourseCard from './CourseCard';
-
+import { courses } from '../data/coursesData.js';
 const CourseList = ({ courses }) => {
   if (!courses || courses.length === 0) {
     return <p className='empty-list'>Geen cursussen gevonden.</p>;
@@ -8,10 +9,11 @@ const CourseList = ({ courses }) => {
   return (
     <section className='course-list'>
       {courses.map((course) => (
-        <CourseCard course={course} />
+        <CourseCard key={course.id} course={course} />
       ))}
     </section>
   );
 };
 
 export default CourseList;
+

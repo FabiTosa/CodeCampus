@@ -16,6 +16,62 @@
   --transition: all 0.3s ease;
 }
 
+body.dark-mode {
+  --primary-color: #2980b9;
+  --primary-dark: #1c598a;
+  --secondary-color: #27ae60;
+  --secondary-dark: #1e8749;
+  --accent-color: #f39c12;
+  --text-color: #e0e0e0;
+  --text-light: #aaa;
+  --bg-color: #1e1e1e;
+  --card-bg: #2c2c2c;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .course-button {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+body.dark-mode .course-button:hover {
+  background-color: var(--primary-dark);
+}
+.dashboard.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.dashboard.dark-mode .dashboard-header {
+  background-color: #1f1f1f;
+  border-bottom-color: #333;
+}
+
+.dashboard.dark-mode .tab-buttons button {
+  background-color: #2c2c2c;
+  color: #eee;
+}
+
+.dashboard.dark-mode .tab-buttons button.active {
+  background-color: #4a90e2;
+  color: white;
+  box-shadow: 0 4px 10px rgba(74, 144, 226, 0.5);
+}
+
+.dashboard.dark-mode .toggle-filters-button {
+  background-color: #2c2c2c;
+  color: #eee;
+}
+
+.dashboard.dark-mode .toggle-filters-button.active {
+  background-color: #4a90e2;
+  color: white;
+  box-shadow: 0 4px 10px rgba(74, 144, 226, 0.5);
+}
+
+
+
+
 * {
   box-sizing: border-box;
   margin: 0;

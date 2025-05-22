@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
+import CourseDetail from './components/CourseDetail';
 import { courses } from './data/coursesData.js';
 import './styles/App.css';
 
@@ -22,22 +24,45 @@ function App() {
     setTimeout(fetchData, 1000);
   }, []);
 
-  return (
-    <main className='app'>
-      <header className='app-header'>
-        <div className='logo-container'>
-          <h1 className='brand-logo'>CodeCampus</h1>
-          <p className='brand-tagline'>Ontdek, Leer, Excelleer</p>
-        </div>
-      </header>
-      {isLoading ? (
+
+  const Header = () => (
+    <header className='app-header'>
+      <div className='logo-container'>
+        <h1 className='brand-logo'>CodeCampus</h1>
+        <p className='brand-tagline'>Ontdek, Leer, Excelleer</p>
+      </div>
+    </header>
+  );
+
+  if (isLoading) {
+    return (
+      <main className='app'>
+        <Header />
         <section className='loading'>Cursussen worden geladen...</section>
-      ) : error ? (
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className='app'>
+        <Header />
         <section className='error'>{error}</section>
-      ) : (
-        <Dashboard courseData={courseData} />
-      )}
-    </main>
+      </main>
+    );
+  }
+
+  return (
+    <Router>
+      <main className='app'>
+        <Header />
+
+        <Routes>
+          <Route path='/' element={<Dashboard courseData={courseData} />} />
+          <Route path='/courses/:id' element={<CourseDetail courses={courseData} />} />
+        </Routes>
+      </main>
+    </Router>
   );
 }
 
