@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/Dashboard.css';
 import CourseList from './CourseList';
 import PopularCourses from './PopularCourses';
@@ -8,19 +9,34 @@ const Dashboard = ({ courseData }) => {
   const [activeTab, setActiveTab] = useState('all');
   const [showMoreFilters, setShowMoreFilters] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');  // <-- new state for search term
+  const [searchTerm, setSearchTerm] = useState('');
+  const [favoriteCourseIds, setFavoriteCourseIds] = useState(new Set());
+
+  const navigate = useNavigate();
 
   const toggleDarkMode = () => {
     setDarkMode(prev => {
       const newMode = !prev;
       if (newMode) {
-        document.body.style.backgroundColor = '#121212'; 
-        document.body.style.color = '#e0e0e0'; 
+        document.body.style.backgroundColor = '#121212';
+        document.body.style.color = '#e0e0e0';
       } else {
-        document.body.style.backgroundColor = ''; 
-        document.body.style.color = ''; 
+        document.body.style.backgroundColor = '';
+        document.body.style.color = '';
       }
       return newMode;
+    });
+  };
+
+  const toggleFavorite = (courseId) => {
+    setFavoriteCourseIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(courseId)) {
+        newSet.delete(courseId);
+      } else {
+        newSet.add(courseId);
+      }
+      return newSet;
     });
   };
 
@@ -33,7 +49,7 @@ const Dashboard = ({ courseData }) => {
     return Array.from(catSet).sort();
   }, [courseData]);
 
-  const basicTabs = ['all', 'beginner', 'gevorderd', 'populair'];
+  const basicTabs = ['all', 'beginner', 'gevorderd', 'populair', 'favorieten'];
   const fullTabs = [...basicTabs, ...categories];
 
   const tabLabels = {
@@ -41,12 +57,12 @@ const Dashboard = ({ courseData }) => {
     beginner: 'Cursussen voor Beginners',
     gevorderd: 'Gevorderde Cursussen',
     populair: 'Meest Bekeken Cursussen',
+    favorieten: 'Favorieten',
   };
   categories.forEach(cat => {
     tabLabels[cat] = cat.charAt(0).toUpperCase() + cat.slice(1);
   });
 
-  // Filter courses by active tab first
   const filteredByTab = useMemo(() => {
     if (!Array.isArray(courseData)) return [];
 
@@ -57,19 +73,18 @@ const Dashboard = ({ courseData }) => {
         return courseData.filter(course => course.level === 'Gevorderd');
       case 'populair':
         return [...courseData].sort((a, b) => b.views - a.views);
+      case 'favorieten':
+        return courseData.filter(course => favoriteCourseIds.has(course.id));
       case 'all':
         return courseData;
       default:
         return courseData.filter(course => course.categories.includes(activeTab));
     }
-  }, [activeTab, courseData]);
+  }, [activeTab, courseData, favoriteCourseIds]);
 
-  // Further filter by search term
   const filteredCourses = useMemo(() => {
     if (!searchTerm) return filteredByTab;
-
     return filteredByTab.filter(course => {
-      // Search in title and description (adjust as needed)
       const searchableText = (course.title + ' ' + (course.description || '')).toLowerCase();
       return searchableText.includes(searchTerm.toLowerCase());
     });
@@ -90,7 +105,6 @@ const Dashboard = ({ courseData }) => {
               {tabLabels[tab]}
             </button>
           ))}
-
           <button
             className={`toggle-filters-button ${showMoreFilters ? 'active' : ''}`}
             onClick={() => setShowMoreFilters(prev => !prev)}
@@ -100,11 +114,9 @@ const Dashboard = ({ courseData }) => {
         </nav>
       </header>
 
-      <div className='dashboard-content' style={{ position: 'relative' }}>
+      <div className='dashboard-content'>
         <section className='main-content'>
           <h2>{tabLabels[activeTab]}</h2>
-
-
           <input
             type="text"
             placeholder="Zoek cursussen..."
@@ -119,35 +131,59 @@ const Dashboard = ({ courseData }) => {
               border: '1px solid #ccc',
             }}
           />
-
-          <CourseList courses={filteredCourses} />
+          <CourseList
+            courses={filteredCourses}
+            favorites={favoriteCourseIds}
+            onToggleFavorite={toggleFavorite}
+          />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '30px',
+              margin: '40px 0',
+            }}
+          >
+            <Link
+              to="/contact"
+              style={{ color: 'blue', textDecoration: 'underline', fontSize: '16px' }}
+            >
+              Contact
+            </Link>
+            <Link
+              to="/help"
+              style={{ color: 'blue', textDecoration: 'underline', fontSize: '16px' }}
+            >
+              Help
+            </Link>
+          </div>
         </section>
 
         <aside className='sidebar'>
           <PopularCourses courses={courseData} />
           <Statistics courses={courseData} />
         </aside>
-
-        <button
-          onClick={toggleDarkMode}
-          style={{
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            padding: '10px 15px',
-            backgroundColor: darkMode ? '#0077ff' : '#f1f3f5',
-            color: darkMode ? '#fff' : '#333',
-            border: 'none',
-            borderRadius: '25px',
-            cursor: 'pointer',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-            zIndex: 1000,
-            transition: 'background-color 0.3s ease, color 0.3s ease',
-          }}
-        >
-          {darkMode ? 'Light Mode' : 'Dark Mode'}
-        </button>
       </div>
+
+      <button
+        onClick={toggleDarkMode}
+        style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          padding: '10px 15px',
+          backgroundColor: darkMode ? '#0077ff' : '#f1f3f5',
+          color: darkMode ? '#fff' : '#333',
+          border: 'none',
+          borderRadius: '25px',
+          cursor: 'pointer',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+          zIndex: 1000,
+          transition: 'background-color 0.3s ease, color 0.3s ease',
+        }}
+      >
+        {darkMode ? 'Light Mode' : 'Dark Mode'}
+      </button>
     </section>
   );
 };

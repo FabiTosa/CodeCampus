@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Help from './components/HelpPage.jsx';
 import Dashboard from './components/Dashboard';
 import CourseDetail from './components/CourseDetail';
 import { courses } from './data/coursesData.js';
+import ContactPage from './components/ContactPage';
 import './styles/App.css';
 
 function App() {
@@ -58,6 +60,8 @@ function App() {
         <Header />
 
         <Routes>
+          <Route path='/contact' element={<ContactPage />} />
+          <Route path='/help' element={<Help />} />
           <Route path='/' element={<Dashboard courseData={courseData} />} />
           <Route path='/courses/:id' element={<CourseDetail courses={courseData} />} />
         </Routes>

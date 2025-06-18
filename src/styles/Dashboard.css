@@ -230,7 +230,7 @@
   box-sizing: border-box;
 }
 
-/* THIS IS THE IMPORTANT PART TO FIX UNDERLINES */
+
 .course-card-link {
   text-decoration: none;
   color: inherit;

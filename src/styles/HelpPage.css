@@ -1,0 +1,65 @@
+.help-page {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 30px;
+  animation: fadeIn 0.5s ease;
+  color: var(--text-color);
+}
+
+.help-header {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 15px;
+}
+
+.help-header h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.help-header .tagline {
+  font-size: 16px;
+  color: var(--text-light);
+}
+
+.help-content {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.help-section {
+  background-color: #f8f9fa;
+  border-radius: var(--border-radius);
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.help-section h3 {
+  margin-top: 0;
+  font-size: 20px;
+  color: var(--primary-color);
+}
+
+.help-section p {
+  margin: 10px 0 0;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+
+@media (max-width: 600px) {
+  .help-page {
+    padding: 15px;
+  }
+
+  .help-header h2 {
+    font-size: 22px;
+  }
+
+  .help-section h3 {
+    font-size: 18px;
+  }
+}
